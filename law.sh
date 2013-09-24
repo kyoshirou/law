@@ -32,19 +32,19 @@ sed -i  's/codepage=cp437/codepage=437/' /mnt/etc/fstab
 sed -i  's/,data=ordered//' /mnt/etc/fstab
 #arch-chroot /mnt
 
-arch-chroot clear
+clear
 arch-chroot echo Enter the Hostname for the new ArchLinux System:
 arch-chroot read hostname
 arch-chroot echo $hostname > /etc/hostname
-arch-chroot clear
+clear
 arch-chroot echo Enter the root\'s password for the new system:
 arch-chroot passwd
-arch-chroot clear
+clear
 arch-chroot echo Enter a user name for the new system:
 arch-chroot read usr
 arch-chroot usr=$(echo $usr | tr '[A-Z]' '[a-z]')
 arch-chroot useradd -m -g users -G wheel,audio,video,storage,power -s /bin/bash $usr
-arch-chroot clear
+clear
 arch-chroot as=\'s
 arch-chroot echo Enter the $usr$as password for the new system:
 arch-chroot passwd $usr
@@ -65,7 +65,7 @@ arch-chroot pacman -S grub-bios --noconfirm
 arch-chroot grub-install --target=i386-pc --recheck /dev/sda
 arch-chroot mkdir -p /boot/grub/locale && grub-mkconfig -o /boot/grub/grub.cfg
 arch-chroot sed -i 's@/vmlinuz-linux@/vmlinuz-linux cryptdevice=/dev/sda3:ArchSysLuks@g' /boot/grub/grub.cfg
-arch-chroot clear
+clear
 arch-chroot echo The new Archlinux system installation is completed. Please Reboot
 arch-chroot exit
 
