@@ -1,12 +1,11 @@
 clear 
 parted /dev/sda mklabel gpt 
 parted -a optimal /dev/sda mkpart primary fat32 1MiB 129MiB 
-parted -a optimal /dev/sda mkpart primary ext4 129MiB 257MiB 
-clear 
-parted -a optimal /dev/sda mkpart primary ext4 257MiB 100% 
+parted -a optimal /dev/sda mkpart primary ext4 129MiB 513MiB 
+parted -a optimal /dev/sda mkpart primary ext4 513MiB 100% 
 parted /dev/sda set 1 boot on parted /dev/sda set 3 lvm on 
 modprobe dm_crypt  
-clear 
+clear
 echo Preparing to encrypt the Archlinux system. 
 cryptsetup -c aes-xts-plain -y -s 512 luksFormat /dev/sda3 
 clear 
