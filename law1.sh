@@ -12,8 +12,8 @@ arch_chroot "echo Enter a user name for the new system:"
 read usr
 usr=$(echo $usr | tr '[A-Z]' '[a-z]')
 arch_chroot "useradd -m -g users -G wheel,audio,video,storage,power -s /bin/bash $usr"
-#as=\'s
-arch_chroot "echo Enter the $usr password for the new system:"
+as=\'s
+arch_chroot "echo Enter the $usr$as password for the new system:"
 arch_chroot "passwd $usr"
 arch_chroot "sed -i '96a\[multilib]\n\SigLevel = PackageRequired\nInclude = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf"
 arch_chroot "pacman -Syy"
@@ -23,6 +23,7 @@ arch_chroot "echo LANG=en_US.UTF-8 > /etc/locale.conf"
 arch_chroot "export LANG=en_US.UTF-8"
 arch_chroot "ln -s /usr/share/zoneinfo/Singapore /etc/localtime"
 arch_chroot "hwclock --systohc --utc"
+arch_chroot "sed -i  '1i\use_lvmetab=1' /etc/lvm/lvm.conf"
 arch_chroot "pacman -S networkmanager network-manager-applet --noconfirm"
 arch_chroot "systemctl enable NetworkManager.service"
 arch_chroot "sed -i  's@autodetect modconf block@autodetect modconf block encrypt lvm2 @g' /etc/mkinitcpio.conf"
