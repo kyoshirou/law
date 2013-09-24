@@ -1,3 +1,8 @@
+arch_chroot() { #{{{
+    arch-chroot /mnt /bin/bash -c "${1}"
+  }
+  #}}}
+
 arch_chroot "echo Enter the Hostname for the new ArchLinux System:"
 arch_chroot "read hostname"
 arch_chroot "echo $hostname > /mnt/etc/hostname"
