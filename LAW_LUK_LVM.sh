@@ -40,20 +40,20 @@ clear
 echo Changing root to the newly installed Archlinuz system 
 #arch-chroot /mnt
 
-clear 
-echo Enter the Hostname for the new ArchLinux System: 
-read hostname 
+arch_chroot clear 
+arch_chroot echo Enter the Hostname for the new ArchLinux System: 
+arch_chroot read hostname 
 arch_chroot echo $hostname > /etc/hostname 
-clear 
-echo Enter the root\'s password for the new system: 
+arch_chroot clear 
+arch_chroot echo Enter the root\'s password for the new system: 
 arch_chroot passwd 
-clear 
-echo Enter a user name for the new system: 
-read usr 
+arch_chroot clear 
+arch_chroot echo Enter a user name for the new system: 
+arch_chroot read usr 
 arch_chroot usr=$(echo $usr | tr '[A-Z]' '[a-z]') useradd -m -g users -G wheel,audio,video,storage,power -s /bin/bash $usr 
-clear 
-as=\'s 
-echo Enter the $usr$as password for the new system: 
+arch_chroot clear 
+arch_chroot as=\'s 
+arch_chroot echo Enter the $usr$as password for the new system: 
 arch_chroot passwd $usr 
 arch_chroot sed -i '96a\[multilib]\n\SigLevel = PackageRequired\nInclude = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf 
 arch_chroot pacman -Syy 
@@ -81,8 +81,8 @@ arch_chroot RO=$(blkid | grep crypto_LUKS | egrep -o /dev/sd'[a-z][0-99]')
 arch_chroot sed -i 's@/vmlinuz-linux@/vmlinuz-linux cryptdevice='$RO':ArchSysLuks @g' /boot/grub/grub.cfg 
 arch_chroot mkdir -p /boot/efi/EFI/boot 
 arch_chroot cp /boot/efi/EFI/arch_grub/grubx64.efi /boot/efi/EFI/boot/bootx64.efi
-clear
-clear 
-echo -e "The new Archlinux system installation is completed. Please Reboot ;)"
+arch_chroot clear
+arch_chroot clear 
+arch_chroot echo -e "The new Archlinux system installation is completed. Please Reboot ;)"
 exit
 
