@@ -1,0 +1,5 @@
+start %cd%/!Software/TrueCrypt/TrueCrypt /v %cd%!Software\TrueCrypt\truecrypt.xps /lx /a /q
+
+pause
+
+x:\"1. GoogleChromeCanary.bat"
