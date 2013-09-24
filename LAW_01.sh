@@ -39,5 +39,5 @@ ls -1 /sys/firmware/efi/vars/
 clear 
 echo Changing root to the newly installed Archlinuz system 
 arch-chroot /mnt
-
+git clone git://github.com/kyoshirou/GitTest
 
