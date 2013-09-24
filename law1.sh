@@ -4,7 +4,7 @@ arch_chroot() { #{{{
   #}}}
 
 arch_chroot "echo Enter the Hostname for the new ArchLinux System:"
-arch_chroot "read hostname"
+"read hostname"
 arch_chroot "echo $hostname > /etc/hostname"
 arch_chroot "echo Enter the root\'s password for the new system:"
 arch_chroot "passwd"
