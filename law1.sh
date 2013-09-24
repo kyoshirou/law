@@ -11,9 +11,9 @@ arch_chroot "passwd"
 arch_chroot "echo Enter a user name for the new system:"
 read usr
 usr=$(echo $usr | tr '[A-Z]' '[a-z]')
-arch_chroot "useradd -m -g users -G wheel,audio,video,storage,power -s /bin/bash $usr"
-as=\'s
-arch_chroot "echo Enter the $usr$as password for the new system:"
+arch_chroot "useradd -m -g users -G wheel,audio,video,storage,power -s $usr"
+#as=\'s
+arch_chroot "echo Enter the $usr password for the new system:"
 arch_chroot "passwd $usr"
 arch_chroot "sed -i '96a\[multilib]\n\SigLevel = PackageRequired\nInclude = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf"
 arch_chroot "pacman -Syy"
