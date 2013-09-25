@@ -4,4 +4,6 @@ tar -xvzf packer.tar.gz
 cd packer
 makepkg -s --asroot
 pacman -U *.xz  --noconfirm
-rm -f ~/packer
+cd ..
+rm -r packer
+rm -f packer*
