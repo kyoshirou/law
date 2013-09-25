@@ -2,10 +2,11 @@ parted /dev/sda mklabel msdos
 parted -a optimal /dev/sda mkpart primary fat32 1MiB 1024MiB
 parted -a optimal /dev/sda mkpart primary ext4 1024MiB 1280MiB
 parted -a optimal /dev/sda mkpart primary ext4 1280MiB 100%
-parted /dev/sda set 1 boot on && parted /dev/sda set 3 lvm on
+parted /dev/sda set 1 boot on
+parted /dev/sda set 3 lvm on
 modprobe dm_crypt
 clear
-echo Starting Up LUKS 
+echo Starting Up LUKS Hard Drive Encryption
 cryptsetup -c aes-xts-plain -y -s 512 luksFormat /dev/sda3 
 clear 
 echo Enter the password to unlock the encrypted drive
