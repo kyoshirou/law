@@ -3,7 +3,8 @@ parted /dev/sda mklabel gpt
 parted -a optimal /dev/sda mkpart primary fat32 1MiB 129MiB 
 parted -a optimal /dev/sda mkpart primary ext4 129MiB 513MiB 
 parted -a optimal /dev/sda mkpart primary ext4 513MiB 100% 
-parted /dev/sda set 1 boot on parted /dev/sda set 3 lvm on 
+parted /dev/sda set 1 boot on 
+parted /dev/sda set 3 lvm on 
 modprobe dm_crypt  
 clear
 echo Preparing to encrypt the Archlinux system. 
@@ -80,11 +81,11 @@ arch_chroot "echo -e "vboxguest\nvboxsf\nvboxvideo" > /etc/modules-load.d/virtua
 arch_chroot "pacman -S grub-efi-x86_64 efibootmgr --noconfirm"
 arch_chroot "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch_grub --recheck"
 arch_chroot "cp /usr/share/locale/en\@quot/LC_MESSAGES/grub.mo /boot/grub/locale/en.mo"
-arch_chroot "ID=$(df /boot/efi/EFI |egrep -o /dev/sd'[a-z][0-9]' | sed 's/[0-9]*//g')" 
-arch_chroot "DN=$(df /boot/efi/EFI |egrep -o /dev/sd'[a-z][0-9]' | sed 's/[/a-z]*//g')"
-arch_chroot "efibootmgr -c -g -d $ID -p $DN -w -L "Arch Linux (GRUB)" -l '\EFI\arch_grub\grubx64.efi'"
+ID=$(df /mnt/boot/efi/EFI |egrep -o /dev/sd'[a-z][0-9]' | sed 's/[0-9]*//g')
+DN=$(df /mnt/boot/efi/EFI |egrep -o /dev/sd'[a-z][0-9]' | sed 's/[/a-z]*//g')
+arch_chroot "efibootmgr -c -g -d $ID -p $DN -w -L 'Arch Linux (GRUB)' -l '\EFI\arch_grub\grubx64.efi'"
 arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
-arch_chroot "RO=$(blkid | grep crypto_LUKS | egrep -o /dev/sd'[a-z][0-99]')"
+RO=$(blkid | grep crypto_LUKS | egrep -o /dev/sd'[a-z][0-99]')
 arch_chroot "sed -i 's@/vmlinuz-linux@/vmlinuz-linux cryptdevice='$RO':ArchSysLuks @g' /boot/grub/grub.cfg"
 arch_chroot "mkdir -p /boot/efi/EFI/boot"
 arch_chroot "cp /boot/efi/EFI/arch_grub/grubx64.efi /boot/efi/EFI/boot/bootx64.efi"
