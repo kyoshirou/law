@@ -1,4 +1,0 @@
-GitTest
-=======
-
-Testing
