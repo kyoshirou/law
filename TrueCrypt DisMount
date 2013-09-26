@@ -1,9 +1,0 @@
-taskkill /f /im chrome.exe
-
-ping -n 3 127.0.0.1 > nul
-
-rmdir /s /q C:\cache 
-
-pause
-
-start %cd%/!Software/TrueCrypt/TrueCrypt.exe /q /dx
