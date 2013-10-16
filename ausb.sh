@@ -32,11 +32,7 @@ pacstrap /mnt base base-devel
 genfstab -U -p /mnt >> /mnt/etc/fstab
 sed -i  's/codepage=cp437/codepage=437/' /mnt/etc/fstab
 sed -i  's/,data=ordered//' /mnt/etc/fstab
-#arch-chroot /mnt
-arch_chroot() { #{{{
-    arch-chroot /mnt /bin/bash -c "${1}"
-  }
-  #}}}
+arch_chroot() { arch-chroot /mnt /bin/bash -c "${1}"}
 clear
 arch_chroot "echo Enter the Hostname for the new ArchLinux System:"
 read hostname
@@ -74,12 +70,9 @@ arch_chroot "sed -i 's@/vmlinuz-linux@/vmlinuz-linux cryptdevice=/dev/sda3:ArchS
 arch_chroot "sudo pacman -S wget --noconfirm"
 arch_chroot "wget https://aur.archlinux.org/packages/pa/packer/packer.tar.gz"
 arch_chroot "tar -xvzf packer.tar.gz"
-arch_chroot "cd packer"
-arch_chroot "sudo pacman -S wget --noconfirm"
-arch_chroot "wget https://aur.archlinux.org/packages/pa/packer/packer.tar.gz"
-arch_chroot "tar -xvzf packer.tar.gz"
 arch_chroot "cd packer && makepkg -s --asroot --noconfirm && pacman -U *.xz  --noconfirm"
 arch_chroot "rm -r packer"
 arch_chroot "rm -f packer*"
+arch_chroot "packer -S google-chrome-beta xf86-video-ati lib32-ati-dri ttf-dejavu xcalib --noedit --noconfirm"
 arch_chroot "echo The new Archlinux system installation is completed. Please Reboot"
 arch_chroot "exit"
