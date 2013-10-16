@@ -1,3 +1,4 @@
+clear
 parted /dev/sdb mklabel msdos
 parted -a optimal /dev/sdb mkpart primary fat32 1MiB 1024MiB
 parted -a optimal /dev/sdb mkpart primary ext4 1024MiB 1280MiB
