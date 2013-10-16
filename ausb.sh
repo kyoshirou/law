@@ -32,11 +32,12 @@ pacstrap /mnt base base-devel
 genfstab -U -p /mnt >> /mnt/etc/fstab
 sed -i  's/codepage=cp437/codepage=437/' /mnt/etc/fstab
 sed -i  's/,data=ordered//' /mnt/etc/fstab
-arch_chroot() { arch-chroot /mnt /bin/bash -c "${1}"}
+arch_chroot() { arch-chroot /mnt /bin/bash -c "${1}" }
 clear
 arch_chroot "echo Enter the Hostname for the new ArchLinux System:"
-read hostname
-arch_chroot "echo $hostname > /etc/hostname"
+#read hostname
+#arch_chroot "echo $hostname > /etc/hostname"
+arch_chroot "echo ARCH-X64USB > /etc/hostname"
 clear
 arch_chroot "echo Enter the root\'s password for the new system:"
 arch_chroot "passwd"
@@ -73,6 +74,8 @@ arch_chroot "tar -xvzf packer.tar.gz"
 arch_chroot "cd packer && makepkg -s --asroot --noconfirm && pacman -U *.xz  --noconfirm"
 arch_chroot "rm -r packer"
 arch_chroot "rm -f packer*"
-arch_chroot "packer -S google-chrome-beta xf86-video-ati lib32-ati-dri ttf-dejavu xcalib --noedit --noconfirm"
+arch_chroot "packer -S google-chrome-beta xf86-video-ati lib32-ati-dri ttf-dejavu xcalib xfce4 xfce4-goodies lxdm --noedit --noconfirm"
+arch_chroot "systemctl enable lxdm.service"
+arch_chroot "sed -i '/# session=\/usr\/bin\/startlxde/a\\nsession=\/usr\/bin\/startxfce4\nautologin='$usr'' /etc/lxdm/lxdm.conf"
 arch_chroot "echo The new Archlinux system installation is completed. Please Reboot"
 arch_chroot "exit"
