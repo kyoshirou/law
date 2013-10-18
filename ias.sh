@@ -43,7 +43,7 @@ xarchiver tar gzip bzip2 zip unzip unrar p7zip arj xz lzop wxgtk xdg-user-dirs \
 pulseaudio pavucontrol alsa-utils pulseaudio-alsa lib32-alsa-lib lib32-libpulse  \
 jack ffmpeg lib32-alsa-plugins lib32-jack lib32-libsamplerate lib32-speex libcanberra-gstreamer \
 smplayer vlc radiotray gstreamer0.10-plugins clementine unrar python2-gobject2 libcec libusb-compat  \
-python-dbus flac librsvg vcdimager libcdio ttf-freefont libxv sdl osdlyrics xvba-video \
+python-dbus flac librsvg vcdimager libcdio libxv sdl osdlyrics xvba-video \
 faenza-icon-theme gtk gtk2 gtk3 \
 thunderbird pidgin purple-plugin-pack pidgin-libnotify libcanberra libcanberra-pulse libcanberra-gstreamer  \
 geany xterm python python2 \
