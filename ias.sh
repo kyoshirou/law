@@ -33,6 +33,8 @@ evince  \
 openssl098 \
 gigolo  \
 uget  \
+qt \
+qt4 \
 aria2  \
 iptables  \
 dnsmasq  \
