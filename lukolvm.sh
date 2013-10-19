@@ -43,7 +43,7 @@ sed -i 's/codepage=cp437/codepage=437/' /mnt/etc/fstab
 sed -i 's/,data=ordered//' /mnt/etc/fstab 
 clear 
 echo Changing root to the newly installed Archlinuz system 
-arch-chroot /mnt
+read xxx
 
 arch_chroot() { 
  arch-chroot /mnt /bin/bash -c "${1}"
@@ -88,7 +88,7 @@ RO="$(blkid | grep crypto_LUKS | egrep -o /dev/sd'[a-z][0-99]')"
 arch_chroot "sed -i 's@/vmlinuz-linux@/vmlinuz-linux cryptdevice='$RO':ArchSysLuks @g' /boot/grub/grub.cfg"
 arch_chroot "mkdir -p /boot/efi/EFI/boot"
 arch_chroot "cp /boot/efi/EFI/arch_grub/grubx64.efi /boot/efi/EFI/boot/bootx64.efi"
-
+read xxx1
 arch_chroot "sudo pacman -S wget --noconfirm"
 arch_chroot "wget https://aur.archlinux.org/packages/pa/packer/packer.tar.gz"
 arch_chroot "tar -xvzf packer.tar.gz"
