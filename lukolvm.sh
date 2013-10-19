@@ -1,75 +1,75 @@
-clear  
-parted /dev/sda mklabel gpt  
-parted -a optimal /dev/sda mkpart primary fat32 1MiB 129MiB  
-parted -a optimal /dev/sda mkpart primary ext4 129MiB 257MiB  
-clear  
-parted -a optimal /dev/sda mkpart primary ext4 257MiB 100%  
-parted /dev/sda set 1 boot on  
-parted /dev/sda set 3 lvm on  
-modprobe dm_crypt   
-clear  
-echo Preparing to encrypt the Archlinux system.  
-cryptsetup -c aes-xts-plain -y -s 512 luksFormat /dev/sda3  
-clear  
-echo Enter the encryption password to unlock the encrypted drive  
-cryptsetup luksOpen /dev/sda3 ArchSysLuks   
-pvcreate /dev/mapper/ArchSysLuks  
-vgcreate ArchSys /dev/mapper/ArchSysLuks  
-lvcreate -C y -L 2G -n swap ArchSys  
-lvcreate -L 20G -n root ArchSys  
-lvcreate -l100%FREE -n home ArchSys  
-mkfs.vfat -F32 /dev/sda1  
-mkfs.ext4 /dev/sda2  
-mkfs.ext4 /dev/ArchSys/root  
-mkfs.ext4 /dev/ArchSys/home  
-mkswap /dev/ArchSys/swap  
-mount /dev/ArchSys/root /mnt   
-mkdir /mnt/home  
-mount /dev/ArchSys/home /mnt/home  
-mkdir /mnt/boot  
-mount /dev/sda2 /mnt/boot  
-mkdir /mnt/boot/efi  
-mount /dev/sda1 /mnt/boot/efi  
+clear 
+parted /dev/sda mklabel gpt 
+parted -a optimal /dev/sda mkpart primary fat32 1MiB 129MiB 
+parted -a optimal /dev/sda mkpart primary ext4 129MiB 257MiB 
+clear 
+parted -a optimal /dev/sda mkpart primary ext4 257MiB 100% 
+parted /dev/sda set 1 boot on 
+parted /dev/sda set 3 lvm on 
+modprobe dm_crypt  
+clear 
+echo Preparing to encrypt the Archlinux system. 
+cryptsetup -c aes-xts-plain -y -s 512 luksFormat /dev/sda3 
+clear 
+echo Enter the encryption password to unlock the encrypted drive 
+cryptsetup luksOpen /dev/sda3 ArchSysLuks  
+pvcreate /dev/mapper/ArchSysLuks 
+vgcreate ArchSys /dev/mapper/ArchSysLuks 
+lvcreate -C y -L 2G -n swap ArchSys 
+lvcreate -L 20G -n root ArchSys 
+lvcreate -l100%FREE -n home ArchSys 
+mkfs.vfat -F32 /dev/sda1 
+mkfs.ext4 /dev/sda2 
+mkfs.ext4 /dev/ArchSys/root 
+mkfs.ext4 /dev/ArchSys/home 
+mkswap /dev/ArchSys/swap 
+mount /dev/ArchSys/root /mnt  
+mkdir /mnt/home 
+mount /dev/ArchSys/home /mnt/home 
+mkdir /mnt/boot 
+mount /dev/sda2 /mnt/boot 
+mkdir /mnt/boot/efi 
+mount /dev/sda1 /mnt/boot/efi 
 mount -t efivarfs efivarfs /sys/firmware/efi/efivars
-sed -i  '1i\Server = http://mirror.nus.edu.sg/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist  
-pacstrap /mnt base base-devel  
-swapon /dev/ArchSys/swap  
-genfstab -U -p /mnt >> /mnt/etc/fstab  
-sed -i  's/codepage=cp437/codepage=437/' /mnt/etc/fstab  
-sed -i  's/,data=ordered//' /mnt/etc/fstab  
-clear  
-echo Changing root to the newly installed Archlinuz system  
+sed -i '1i\Server = http://mirror.nus.edu.sg/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist 
+pacstrap /mnt base base-devel 
+swapon /dev/ArchSys/swap 
+genfstab -U -p /mnt >> /mnt/etc/fstab 
+sed -i 's/codepage=cp437/codepage=437/' /mnt/etc/fstab 
+sed -i 's/,data=ordered//' /mnt/etc/fstab 
+clear 
+echo Changing root to the newly installed Archlinuz system 
 arch-chroot /mnt
 
 arch_chroot() { 
-  arch-chroot /mnt /bin/bash -c "${1}"
-  }
-  
-clear  
+ arch-chroot /mnt /bin/bash -c "${1}"
+ }
+ 
+clear 
 arch_chroot "echo Enter the Hostname for the new ArchLinux System:"
-read hostname  
+read hostname 
 arch_chroot "echo $hostname > /etc/hostname"
-clear  
+clear 
 arch_chroot "echo Enter the root\'s password for the new system:"
 arch_chroot "passwd"
-clear  
+clear 
 arch_chroot "echo Enter a user name for the new system:"
-read usr  
-arch_chroot "usr=$(echo $usr | tr '[A-Z]' '[a-z]')  useradd -m -g users -G wheel,audio,video,storage,power -s /bin/bash $usr"
-clear  
+read usr 
+arch_chroot "usr=$(echo $usr | tr '[A-Z]' '[a-z]') useradd -m -g users -G wheel,audio,video,storage,power -s /bin/bash $usr"
+clear 
 arch_chroot "echo Enter the $usr password for the new system:"
 arch_chroot "passwd $usr"
 arch_chroot "sed -i '96a\[multilib]\n\SigLevel = PackageRequired\nInclude = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf"
 arch_chroot "pacman -Syy"
-arch_chroot "sed -i  '1i\en_US.UTF-8 UTF-8' /etc/locale.gen"
+arch_chroot "sed -i '1i\en_US.UTF-8 UTF-8' /etc/locale.gen"
 arch_chroot "locale-gen"
 arch_chroot "echo LANG=en_US.UTF-8 > /etc/locale.conf"
 arch_chroot "export LANG=en_US.UTF-8"
 arch_chroot "ln -s /usr/share/zoneinfo/Singapore /etc/localtime"
 arch_chroot "hwclock --systohc --utc"
-arch_chroot "pacman -S networkmanager network-manager-applet --noconfirm"  
+arch_chroot "pacman -S networkmanager network-manager-applet --noconfirm" 
 arch_chroot "systemctl enable NetworkManager.service"
-arch_chroot "sed -i  's@autodetect modconf block@autodetect modconf block encrypt lvm2 @g' /etc/mkinitcpio.conf"
+arch_chroot "sed -i 's@autodetect modconf block@autodetect modconf block encrypt lvm2 @g' /etc/mkinitcpio.conf"
 arch_chroot "mkinitcpio -p linux "
 
 arch_chroot "mount -t efivarfs efivarfs /sys/firmware/efi/efivars"
@@ -88,7 +88,7 @@ arch_chroot "cp /boot/efi/EFI/arch_grub/grubx64.efi /boot/efi/EFI/boot/bootx64.e
 arch_chroot "sudo pacman -S wget --noconfirm"
 arch_chroot "wget https://aur.archlinux.org/packages/pa/packer/packer.tar.gz"
 arch_chroot "tar -xvzf packer.tar.gz"
-arch_chroot "cd packer && makepkg -s --asroot --noconfirm && pacman -U *.xz  --noconfirm"
+arch_chroot "cd packer && makepkg -s --asroot --noconfirm && pacman -U *.xz --noconfirm"
 arch_chroot "rm -r packer"
 arch_chroot "rm -f packer*"
 arch_chroot "packer -S google-chrome-beta xfce4 xfce4-goodies lxdm --noedit --noconfirm"
