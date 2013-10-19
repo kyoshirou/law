@@ -1,11 +1,14 @@
 clear 
 parted /dev/sda mklabel gpt 
 parted -a optimal /dev/sda mkpart primary fat32 1MiB 129MiB 
+clear 
 parted -a optimal /dev/sda mkpart primary ext4 129MiB 257MiB 
 clear 
 parted -a optimal /dev/sda mkpart primary ext4 257MiB 100% 
+clear 
 parted /dev/sda set 1 boot on 
 parted /dev/sda set 3 lvm on 
+clear 
 modprobe dm_crypt  
 clear 
 echo Preparing to encrypt the Archlinux system. 
@@ -18,6 +21,7 @@ vgcreate ArchSys /dev/mapper/ArchSysLuks
 lvcreate -C y -L 2G -n swap ArchSys 
 lvcreate -L 20G -n root ArchSys 
 lvcreate -l100%FREE -n home ArchSys 
+clear 
 mkfs.vfat -F32 /dev/sda1 
 mkfs.ext4 /dev/sda2 
 mkfs.ext4 /dev/ArchSys/root 
@@ -78,7 +82,7 @@ arch_chroot "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootlo
 arch_chroot "cp /usr/share/locale/en\@quot/LC_MESSAGES/grub.mo /boot/grub/locale/en.mo"
 ID="$(df /boot/efi/EFI |egrep -o /dev/sd'[a-z][0-9]' | sed 's/[0-9]*//g')"
 DN="$(df /boot/efi/EFI |egrep -o /dev/sd'[a-z][0-9]' | sed 's/[/a-z]*//g')"
-arch_chroot "efibootmgr -c -g -d $ID -p $DN -w -L "Arch Linux (GRUB)" -l '\EFI\arch_grub\grubx64.efi' "
+arch_chroot "efibootmgr -c -g -d $ID -p $DN -w -L 'Arch Linux (GRUB)' -l '\EFI\arch_grub\grubx64.efi' "
 arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
 RO="$(blkid | grep crypto_LUKS | egrep -o /dev/sd'[a-z][0-99]')"
 arch_chroot "sed -i 's@/vmlinuz-linux@/vmlinuz-linux cryptdevice='$RO':ArchSysLuks @g' /boot/grub/grub.cfg"
@@ -95,8 +99,6 @@ arch_chroot "packer -S google-chrome-beta xfce4 xfce4-goodies lxdm --noedit --no
 arch_chroot "systemctl enable lxdm.service"
 arch_chroot "echo 'blacklist pcspkr' > /etc/modprobe.d/nobeep.conf"
 arch_chroot "sed -i '/# session=\/usr\/bin\/startlxde/a\nsession=\/usr\/bin\/startxfce4\nautologin='$usr'' /etc/lxdm/lxdm.conf"
+clear
 arch_chroot "echo The new Archlinux system installation is completed. Please Reboot"
-
-arch_chroot "exit"
-
 
