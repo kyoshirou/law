@@ -30,6 +30,7 @@ mkdir /mnt/boot
 mount /dev/sda2 /mnt/boot  
 mkdir /mnt/boot/efi  
 mount /dev/sda1 /mnt/boot/efi  
+mount -t efivarfs efivarfs /sys/firmware/efi/efivars
 sed -i  '1i\Server = http://mirror.nus.edu.sg/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist  
 pacstrap /mnt base base-devel  
 swapon /dev/ArchSys/swap  
@@ -54,7 +55,7 @@ arch_chroot "passwd"
 clear  
 arch_chroot "echo Enter a user name for the new system:"
 read usr  
-arch_chroot "usr=$(echo $usr | tr '[A-Z]' '[a-z]')  useradd -m -g users -G wheel,audio,video,storage,power -s /bin/bash $usr  "
+arch_chroot "usr=$(echo $usr | tr '[A-Z]' '[a-z]')  useradd -m -g users -G wheel,audio,video,storage,power -s /bin/bash $usr"
 clear  
 arch_chroot "echo Enter the $usr password for the new system:"
 arch_chroot "passwd $usr"
@@ -71,21 +72,31 @@ arch_chroot "systemctl enable NetworkManager.service"
 arch_chroot "sed -i  's@autodetect modconf block@autodetect modconf block encrypt lvm2 @g' /etc/mkinitcpio.conf"
 arch_chroot "mkinitcpio -p linux "
 
-
-arch_chroot "pacman -S xorg-server xorg-xinit xorg-server-utils virtualbox-guest-utils xfce4 xfce4-goodies firefox lxdm --noconfirm  "
-arch_chroot "systemctl enable lxdm.service  "
-arch_chroot "sed -i '/# session=\/usr\/bin\/startlxde/a\\nsession=\/usr\/bin\/startxfce4\nautologin='$usr'' /etc/lxdm/lxdm.conf  "
-arch_chroot "echo -e "vboxguest\nvboxsf\nvboxvideo" > /etc/modules-load.d/virtualbox.conf  "
-arch_chroot "pacman -S grub efibootmgr --noconfirm  "
-arch_chroot "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch_grub --recheck  "
+arch_chroot "mount -t efivarfs efivarfs /sys/firmware/efi/efivars"
+arch_chroot "pacman -S grub efibootmgr --noconfirm"
+arch_chroot "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch_grub --recheck"
 arch_chroot "cp /usr/share/locale/en\@quot/LC_MESSAGES/grub.mo /boot/grub/locale/en.mo"
 ID="$(df /boot/efi/EFI |egrep -o /dev/sd'[a-z][0-9]' | sed 's/[0-9]*//g')"
 DN="$(df /boot/efi/EFI |egrep -o /dev/sd'[a-z][0-9]' | sed 's/[/a-z]*//g')"
 arch_chroot "efibootmgr -c -g -d $ID -p $DN -w -L "Arch Linux (GRUB)" -l '\EFI\arch_grub\grubx64.efi' "
-arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg  "
-RO="$(blkid | grep crypto_LUKS | egrep -o /dev/sd'[a-z][0-99]')  "
+arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
+RO="$(blkid | grep crypto_LUKS | egrep -o /dev/sd'[a-z][0-99]')"
 arch_chroot "sed -i 's@/vmlinuz-linux@/vmlinuz-linux cryptdevice='$RO':ArchSysLuks @g' /boot/grub/grub.cfg"
-arch_chroot "mkdir -p /boot/efi/EFI/boot  "
+arch_chroot "mkdir -p /boot/efi/EFI/boot"
 arch_chroot "cp /boot/efi/EFI/arch_grub/grubx64.efi /boot/efi/EFI/boot/bootx64.efi"
-echo -e "The new Archlinux system installation is completed. Please Reboot ;)" 
+
+arch_chroot "sudo pacman -S wget --noconfirm"
+arch_chroot "wget https://aur.archlinux.org/packages/pa/packer/packer.tar.gz"
+arch_chroot "tar -xvzf packer.tar.gz"
+arch_chroot "cd packer && makepkg -s --asroot --noconfirm && pacman -U *.xz  --noconfirm"
+arch_chroot "rm -r packer"
+arch_chroot "rm -f packer*"
+arch_chroot "packer -S google-chrome-beta xfce4 xfce4-goodies lxdm --noedit --noconfirm"
+arch_chroot "systemctl enable lxdm.service"
+arch_chroot "echo 'blacklist pcspkr' > /etc/modprobe.d/nobeep.conf"
+arch_chroot "sed -i '/# session=\/usr\/bin\/startlxde/a\nsession=\/usr\/bin\/startxfce4\nautologin='$usr'' /etc/lxdm/lxdm.conf"
+arch_chroot "echo The new Archlinux system installation is completed. Please Reboot"
+
+arch_chroot "exit"
+
 
