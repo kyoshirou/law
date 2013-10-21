@@ -1,7 +1,7 @@
 arch_chroot() { 
   arch-chroot /mnt /bin/bash -c "${1}"
   }
-arch_chroot "sudo packer -S  \
+arch_chroot "packer -S  \
 lib32-sdl_ttf  \
 opendesktop-fonts  \
 sdl_ttf  \
