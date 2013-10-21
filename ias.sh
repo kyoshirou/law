@@ -7,19 +7,16 @@ sdl_ttf  \
 ttf-arphic-ukai  \
 ttf-arphic-uming  \
 ttf-bitstream-vera  \
-ttf-droid  \
 ttf-freefont  \
 ttf-gentium  \
 ttf-google-fonts-git \
 ttf-hanazono  \
 ttf-hannom  \
-ttf-inconsolata  \
 ttf-liberation  \
 ttf-linux-libertine  \
 ttf-ms-fonts \
 ttf-sazanami  \
 ttf-tw \
-ttf-ubuntu-font-family \
 wqy-bitmapfont  \
 wqy-microhei \
 wqy-zenhei \
@@ -52,4 +49,4 @@ python-dbus flac librsvg vcdimager libcdio libxv sdl osdlyrics xvba-video \
 faenza-icon-theme gtk gtk2 gtk3 \
 thunderbird pidgin purple-plugin-pack pidgin-libnotify libcanberra libcanberra-pulse libcanberra-gstreamer  \
 geany xterm python python2 \
-gparted clonezilla dosfstools ntfs-3g"
+gparted clonezilla dosfstools ntfs-3g --noedit --noconfirm"
