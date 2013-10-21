@@ -1,4 +1,5 @@
-parted /dev/sda mklabel msdos 
+clear
+parted /dev/sda mklabel msdos
 parted -a optimal /dev/sda mkpart primary fat32 1MiB 1024MiB
 parted -a optimal /dev/sda mkpart primary ext4 1024MiB 1280MiB
 parted -a optimal /dev/sda mkpart primary ext4 1280MiB 100%
@@ -32,7 +33,9 @@ pacstrap /mnt base base-devel
 genfstab -U -p /mnt >> /mnt/etc/fstab
 sed -i  's/codepage=cp437/codepage=437/' /mnt/etc/fstab
 sed -i  's/,data=ordered//' /mnt/etc/fstab
-arch_chroot() { arch-chroot /mnt /bin/bash -c "${1}" }
+arch_chroot() { 
+  arch-chroot /mnt /bin/bash -c "${1}"
+  }
 clear
 arch_chroot "echo Enter the Hostname for the new ArchLinux System:"
 #read hostname
@@ -58,7 +61,7 @@ arch_chroot "export LANG=en_US.UTF-8"
 arch_chroot "ln -s /usr/share/zoneinfo/Singapore /etc/localtime"
 arch_chroot "hwclock --systohc --utc"
 arch_chroot "sed -i  '1i\use_lvmetab=1' /etc/lvm/lvm.conf"
-arch_chroot "pacman -S networkmanager network-manager-applet chromium --noconfirm"
+arch_chroot "pacman -S networkmanager network-manager-applet --noconfirm"
 arch_chroot "systemctl enable NetworkManager.service"
 arch_chroot "sed -i  's@autodetect modconf block@autodetect modconf block encrypt lvm2 @g' /etc/mkinitcpio.conf"
 arch_chroot "mkinitcpio -p linux"
@@ -76,6 +79,7 @@ arch_chroot "rm -r packer"
 arch_chroot "rm -f packer*"
 arch_chroot "packer -S google-chrome-beta xf86-video-ati lib32-ati-dri ttf-dejavu xcalib xfce4 xfce4-goodies lxdm --noedit --noconfirm"
 arch_chroot "systemctl enable lxdm.service"
+arch_chroot "echo 'blacklist pcspkr' > /etc/modprobe.d/nobeep.conf"
 arch_chroot "sed -i '/# session=\/usr\/bin\/startlxde/a\nsession=\/usr\/bin\/startxfce4\nautologin='$usr'' /etc/lxdm/lxdm.conf"
 arch_chroot "echo The new Archlinux system installation is completed. Please Reboot"
 arch_chroot "exit"
