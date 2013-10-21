@@ -1,4 +1,7 @@
-sudo packer -S  \
+arch_chroot() { 
+  arch-chroot /mnt /bin/bash -c "${1}"
+  }
+arch_chroot "sudo packer -S  \
 lib32-sdl_ttf  \
 opendesktop-fonts  \
 sdl_ttf  \
@@ -8,6 +11,7 @@ ttf-bitstream-vera  \
 ttf-droid  \
 ttf-freefont  \
 ttf-gentium  \
+ttf-google-fonts-git\
 ttf-hanazono  \
 ttf-hannom  \
 ttf-inconsolata  \
@@ -49,4 +53,4 @@ python-dbus flac librsvg vcdimager libcdio libxv sdl osdlyrics xvba-video \
 faenza-icon-theme gtk gtk2 gtk3 \
 thunderbird pidgin purple-plugin-pack pidgin-libnotify libcanberra libcanberra-pulse libcanberra-gstreamer  \
 geany xterm python python2 \
-gparted clonezilla dosfstools ntfs-3g 
+gparted clonezilla dosfstools ntfs-3g"
