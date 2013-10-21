@@ -1,3 +1,6 @@
+# sed -i '1i\Server = http://mirror.nus.edu.sg/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist 
+# pacman -Syy git
+# git clone git://github.com/kyoshirou/law
 clear 
 parted /dev/sda mklabel gpt 
 parted -a optimal /dev/sda mkpart primary fat32 1MiB 129MiB 
