@@ -34,7 +34,6 @@ mkdir /mnt/boot
 mount /dev/sda2 /mnt/boot 
 mkdir /mnt/boot/efi 
 mount /dev/sda1 /mnt/boot/efi 
-mount -t efivarfs efivarfs /sys/firmware/efi/efivars
 sed -i '1i\Server = http://mirror.nus.edu.sg/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist 
 pacstrap /mnt base base-devel 
 swapon /dev/ArchSys/swap 
