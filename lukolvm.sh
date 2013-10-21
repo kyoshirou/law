@@ -75,7 +75,7 @@ arch_chroot "systemctl enable NetworkManager.service"
 arch_chroot "sed -i 's@autodetect modconf block@autodetect modconf block encrypt lvm2 @g' /etc/mkinitcpio.conf"
 arch_chroot "mkinitcpio -p linux "
 
-arch_chroot "mount -t efivarfs efivarfs /sys/firmware/efi/efivars"
+#arch_chroot "mount -t efivarfs efivarfs /sys/firmware/efi/efivars"
 arch_chroot "pacman -S grub efibootmgr --noconfirm"
 arch_chroot "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch_grub --recheck"
 arch_chroot "cp /usr/share/locale/en\@quot/LC_MESSAGES/grub.mo /boot/grub/locale/en.mo"
