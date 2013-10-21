@@ -10,7 +10,7 @@ ttf-bitstream-vera  \
 ttf-droid  \
 ttf-freefont  \
 ttf-gentium  \
-ttf-google-fonts-git\
+ttf-google-fonts-git \
 ttf-hanazono  \
 ttf-hannom  \
 ttf-inconsolata  \
