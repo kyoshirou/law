@@ -81,5 +81,6 @@ arch_chroot "packer -S google-chrome-beta xfce4 xfce4-goodies lxdm --noedit --no
 arch_chroot "systemctl enable lxdm.service"
 arch_chroot "echo 'blacklist pcspkr' > /etc/modprobe.d/nobeep.conf"
 arch_chroot "sed -i '/# session=\/usr\/bin\/startlxde/a\session=\/usr\/bin\/startxfce4\nautologin='$usr'' /etc/lxdm/lxdm.conf"
+arch_chroot "packer -S google-chrome-beta --noedit --noconfirm"
 arch_chroot "echo The new Archlinux system installation is completed. Please Reboot"
 arch_chroot "exit"
