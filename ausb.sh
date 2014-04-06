@@ -1,8 +1,8 @@
 clear
 parted /dev/sda mklabel msdos
 parted -a optimal /dev/sda mkpart primary fat32 1MiB 1024MiB
-parted -a optimal /dev/sda mkpart primary ext4 1024MiB 1280MiB
-parted -a optimal /dev/sda mkpart primary ext4 1280MiB 100%
+parted -a optimal /dev/sda mkpart primary ext4 1024MiB 1536MiB
+parted -a optimal /dev/sda mkpart primary ext4 1536MiB 100%
 parted /dev/sda set 1 boot on
 parted /dev/sda set 3 lvm on
 modprobe dm_crypt
@@ -38,9 +38,9 @@ arch_chroot() {
   }
 clear
 arch_chroot "echo Enter the Hostname for the new ArchLinux System:"
-#read hostname
-#arch_chroot "echo $hostname > /etc/hostname"
-arch_chroot "echo ARCH-VFX64U > /etc/hostname"
+read hostname
+arch_chroot "echo $hostname > /etc/hostname"
+#arch_chroot "echo -VFX64U > /etc/hostname"
 clear
 arch_chroot "echo Enter the root\'s password for the new system:"
 arch_chroot "passwd"
