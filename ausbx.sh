@@ -40,7 +40,7 @@ clear
 arch_chroot "echo Enter the Hostname for the new ArchLinux System:"
 #read hostname
 #arch_chroot "echo $hostname > /etc/hostname"
-arch_chroot "echo ARCH-VFX64U > /etc/hostname"
+arch_chroot "echo VFX-ARCHX64U > /etc/hostname"
 clear
 arch_chroot "echo Enter the root\'s password for the new system:"
 arch_chroot "passwd"
@@ -63,7 +63,7 @@ arch_chroot "hwclock --systohc --utc"
 arch_chroot "sed -i  '1i\use_lvmetab=1' /etc/lvm/lvm.conf"
 arch_chroot "pacman -S networkmanager network-manager-applet --noconfirm"
 arch_chroot "systemctl enable NetworkManager.service"
-arch_chroot "sed -i  's@autodetect modconf block@autodetect modconf block encrypt lvm2 @g' /etc/mkinitcpio.conf"
+arch_chroot "sed -i  's@autodetect modconf block@autodetect modconf block radeon encrypt lvm2 @g' /etc/mkinitcpio.conf"
 arch_chroot "mkinitcpio -p linux"
 arch_chroot "pacman -S xorg-server xorg-xinit xorg-server-utils --noconfirm"
 arch_chroot "pacman -S grub-bios --noconfirm"
