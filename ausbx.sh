@@ -27,7 +27,6 @@ mkdir /mnt/home
 mount /dev/ArchSys/home /mnt/home
 mkdir /mnt/boot
 mount /dev/sdb2 /mnt/boot
-sed -i  '1i\Server = http://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist
 sed -i  '1i\Server = http://mirror.nus.edu.sg/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel
 genfstab -U -p /mnt >> /mnt/etc/fstab
@@ -64,7 +63,7 @@ arch_chroot "hwclock --systohc --utc"
 arch_chroot "sed -i  '1i\use_lvmetab=1' /etc/lvm/lvm.conf"
 arch_chroot "pacman -S networkmanager network-manager-applet --noconfirm"
 arch_chroot "systemctl enable NetworkManager.service"
-arch_chroot "sed -i  's@autodetect modconf block@autodetect modconf block radeon encrypt lvm2 @g' /etc/mkinitcpio.conf"
+arch_chroot "sed -i  's@autodetect modconf block@autodetect modconf block encrypt lvm2 @g' /etc/mkinitcpio.conf"
 arch_chroot "mkinitcpio -p linux"
 arch_chroot "pacman -S xorg-server xorg-xinit xorg-server-utils --noconfirm"
 arch_chroot "pacman -S grub-bios --noconfirm"
