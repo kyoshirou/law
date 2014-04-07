@@ -53,6 +53,7 @@ clear
 arch_chroot "echo Enter the password for $usr to logon to the new system:"
 arch_chroot "passwd $usr"
 arch_chroot "sed -i '96a\[multilib]\n\SigLevel = PackageRequired\nInclude = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf"
+arch_chroot "sed -i '1a\nblacklist asus-wmi\ninstall asus-wmi /bin/false\nblacklist button\ninstall button /bin/false\nblacklist eeepc-wmi\ninstall eeepc-wmi /bin/false\nblacklist mxm-wmi\ninstall mxm-wmi /bin/false\nblacklist rfkill\ninstall rfkill /bin/false\nblacklist sparse-keymap\ninstall sparse-keymap /bin/false\nblacklist video\ninstall video /bin/false\nblacklist wmi\ninstall wmi /bin/false' /etc/modprobe.d/blacklist.conf"
 arch_chroot "pacman -Syy"
 arch_chroot "sed -i  '1i\en_US.UTF-8 UTF-8' /etc/locale.gen"
 arch_chroot "locale-gen"
