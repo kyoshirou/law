@@ -66,7 +66,6 @@ arch_chroot "sed -i  's@autodetect modconf block@autodetect modconf block encryp
 arch_chroot "mkinitcpio -p linux"
 arch_chroot "pacman -S xorg-server xorg-xinit xorg-server-utils mesa --noconfirm"
 arch_chroot "pacman -S xorg-twm xorg-xclock xterm"
-arch_chroot "pacman -S xf86-video-ati	lib32-ati-dri"
 arch_chroot "pacman -S grub-bios --noconfirm"
 arch_chroot "grub-install --target=i386-pc --recheck /dev/sdb"
 arch_chroot "mkdir -p /boot/grub/locale"
