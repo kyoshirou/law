@@ -1,7 +1,7 @@
 clear
 parted /dev/sdb mklabel msdos
-parted -a optimal /dev/sdb mkpart primary fat32 1MiB 8192MiB
-parted -a optimal /dev/sdb mkpart primary ext4 8192MiB 8704MiB
+parted -a optimal /dev/sdb mkpart primary fat32 1MiB 2192MiB
+parted -a optimal /dev/sdb mkpart primary ext4 2192MiB 2704MiB
 parted -a optimal /dev/sdb mkpart primary ext4 8704MiB 100%
 parted /dev/sdb set 1 boot on
 parted /dev/sdb set 3 lvm on
