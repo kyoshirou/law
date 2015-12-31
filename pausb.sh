@@ -34,9 +34,6 @@ pacstrap /mnt base base-devel
 genfstab -U -p /mnt >> /mnt/etc/fstab
 sed -i  's/codepage=cp437/codepage=437/' /mnt/etc/fstab
 sed -i  's/,data=ordered//' /mnt/etc/fstab
-clear
-echo "Part1 Complete"
-read archx
 arch_chroot() { 
   arch-chroot /mnt /bin/bash -c "${1}"
   }
@@ -83,7 +80,7 @@ arch_chroot "systemctl enable ntpd"
 arch_chroot "echo 'blacklist pcspkr' > /etc/modprobe.d/nobeep.conf"
 #arch_chroot "sed -i '/# session=\/usr\/bin\/startlxde/a\session=\/usr\/bin\/startxfce4\nautologin='$usr'' /etc/lxdm/lxdm.conf"
 arch_chroot "echo -e 'git clone http://aur.archlinux.org/packer.git\ncd packer\nmakepkg packer\nsudo pacman -U *.xz --noconfirm'>> /home/$usr/pk.sh"
-arch_chroot "sed -i  '1i\[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startxfce4' /home/$usr/.bashrc"
+arch_chroot "sed -i  '1i\[[ -z \$DISPLAY && \$XDG_VTNR -eq 1 ]] && exec startxfce4' /home/$usr/.bashrc"
 arch_chroot "pacman -S virtualbox-guest-utils  --noconfirm"
 arch_chroot "echo -e "vboxguest\nvboxsf\nvboxvideo" > /etc/modules-load.d/virtualbox.conf"
 arch_chroot "EDITOR=nano visudo"
