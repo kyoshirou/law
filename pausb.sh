@@ -35,6 +35,7 @@ genfstab -U -p /mnt >> /mnt/etc/fstab
 sed -i  's/codepage=cp437/codepage=437/' /mnt/etc/fstab
 sed -i  's/,data=ordered//' /mnt/etc/fstab
 clear
+echo "Part1 Complete"
 read archx
 arch_chroot() { 
   arch-chroot /mnt /bin/bash -c "${1}"
