@@ -34,6 +34,7 @@ pacstrap /mnt base base-devel
 genfstab -U -p /mnt >> /mnt/etc/fstab
 sed -i  's/codepage=cp437/codepage=437/' /mnt/etc/fstab
 sed -i  's/,data=ordered//' /mnt/etc/fstab
+read archx
 arch_chroot() { 
   arch-chroot /mnt /bin/bash -c "${1}"
   }
