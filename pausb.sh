@@ -51,6 +51,7 @@ read usr
 usr=$(echo $usr | tr '[A-Z]' '[a-z]')
 arch_chroot "useradd -m -g users -G wheel,audio,video,storage,power -s /bin/bash $usr"
 clear
+read donex
 arch_chroot "echo Enter the password for $usr to logon to the new system:"
 arch_chroot "passwd $usr"
 arch_chroot "sed -i '96a\[multilib]\n\SigLevel = PackageRequired\nInclude = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf"
@@ -73,7 +74,11 @@ arch_chroot "grub-install --target=i386-pc --recheck /dev/sda"
 arch_chroot "mkdir -p /boot/grub/locale"
 arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
 arch_chroot "sed -i 's@/vmlinuz-linux@/vmlinuz-linux cryptdevice=/dev/sda3:ArchSysLuks@g' /boot/grub/grub.cfg"
-arch_chroot "sudo pacman -S git expac jshon --noconfirm"
+arch_chroot "pacman -S git expac jshon xcalib xfce4 xfce4-goodies lxdm --noedit --noconfirm"
+arch_chroot "systemctl enable lxdm.service"
+arch_chroot "systemctl enable ntpd"
+arch_chroot "echo 'blacklist pcspkr' > /etc/modprobe.d/nobeep.conf"
+arch_chroot "sed -i '/# session=\/usr\/bin\/startlxde/a\session=\/usr\/bin\/startxfce4\nautologin='$usr'' /etc/lxdm/lxdm.conf"
 arch_chroot "echo -e 'git clone http://aur.archlinux.org/packer.git\ncd packer\nmakepkg packer\nsudo pacman -U *.xz --noconfirm'>> /home/$usr/pk.sh"
 arch_chroot "EDITOR=nano visudo"
 arch_chroot "echo The new Archlinux system installation is completed. Please Reboot"
