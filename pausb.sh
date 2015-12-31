@@ -51,7 +51,6 @@ read usr
 usr=$(echo $usr | tr '[A-Z]' '[a-z]')
 arch_chroot "useradd -m -g users -G wheel,audio,video,storage,power -s /bin/bash $usr"
 clear
-read donex
 arch_chroot "echo Enter the password for $usr to logon to the new system:"
 arch_chroot "passwd $usr"
 arch_chroot "sed -i '96a\[multilib]\n\SigLevel = PackageRequired\nInclude = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf"
