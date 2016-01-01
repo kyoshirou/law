@@ -19,9 +19,9 @@ lvcreate -C y -L 1G -n swap ArchSys
 lvcreate -l100%FREE -n home ArchSys
 mkswap /dev/ArchSys/swap
 mkfs.vfat -F32 /dev/sda1
-mkfs.ext4 -f /dev/sda2
-mkfs.ext4 -f /dev/ArchSys/root
-mkfs.ext4 -f /dev/ArchSys/home
+mkfs.ext4 -F /dev/sda2
+mkfs.ext4 -F /dev/ArchSys/root
+mkfs.ext4 -F /dev/ArchSys/home
 mount /dev/ArchSys/root /mnt
 mkdir /mnt/home
 mount /dev/ArchSys/home /mnt/home
