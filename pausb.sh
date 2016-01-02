@@ -1,3 +1,4 @@
+#https://goo.gl/CGT308
 clear
 parted /dev/sda mklabel msdos
 parted -a optimal /dev/sda mkpart primary fat32 1MiB 5120MiB
