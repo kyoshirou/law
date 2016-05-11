@@ -15,8 +15,8 @@ echo Enter the password to unlock the encrypted drive
 cryptsetup luksOpen /dev/sda3 ArchSysLuks
 pvcreate /dev/mapper/ArchSysLuks
 vgcreate ArchSys /dev/mapper/ArchSysLuks 
-lvcreate -L 8G -n root ArchSys
-lvcreate -C y -L 1G -n swap ArchSys
+lvcreate -L 12G -n root ArchSys
+lvcreate -C y -L 2G -n swap ArchSys
 lvcreate -l100%FREE -n home ArchSys
 mkswap /dev/ArchSys/swap
 mkfs.vfat -F32 /dev/sda1
