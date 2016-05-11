@@ -1,8 +1,8 @@
 clear
 parted /dev/sdb mklabel msdos
-parted -a optimal /dev/sdb mkpart primary fat32 1MiB 1024MiB
-parted -a optimal /dev/sdb mkpart primary ext4 1024MiB 1280MiB
-parted -a optimal /dev/sdb mkpart primary ext4 1280MiB 100%
+parted -a optimal /dev/sdb mkpart primary fat32 1MiB 5120MiB
+parted -a optimal /dev/sdb mkpart primary ext4 5120MiB 5632MiB
+parted -a optimal /dev/sdb mkpart primary ext4 5632MiB 100%
 parted /dev/sdb set 1 boot on
 parted /dev/sdb set 3 lvm on
 modprobe dm_crypt
@@ -14,8 +14,8 @@ echo Enter the password to unlock the encrypted drive
 cryptsetup luksOpen /dev/sdb3 ArchSysLuks
 pvcreate /dev/mapper/ArchSysLuks
 vgcreate ArchSys /dev/mapper/ArchSysLuks 
-lvcreate -L 8G -n root ArchSys
-lvcreate -C y -L 1G -n swap ArchSys
+lvcreate -L 12G -n root ArchSys
+lvcreate -C y -L 2G -n swap ArchSys
 lvcreate -l100%FREE -n home ArchSys
 mkswap /dev/ArchSys/swap
 mkfs.vfat -F32 /dev/sdb1
