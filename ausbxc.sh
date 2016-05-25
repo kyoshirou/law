@@ -1,32 +1,32 @@
 clear
-parted /dev/sdc mklabel msdos
-parted -a optimal /dev/sdc mkpart primary fat32 1MiB 5120MiB
-parted -a optimal /dev/sdc mkpart primary ext4 5120MiB 6144MiB
-parted -a optimal /dev/sdc mkpart primary ext4 6144MiB 100%
-parted /dev/sdc set 1 boot on
-parted /dev/sdc set 3 lvm on
+parted /dev/sdb mklabel msdos
+parted -a optimal /dev/sdb mkpart primary fat32 1MiB 5120MiB
+parted -a optimal /dev/sdb mkpart primary ext4 5120MiB 6144MiB
+parted -a optimal /dev/sdb mkpart primary ext4 6144MiB 100%
+parted /dev/sdb set 1 boot on
+parted /dev/sdb set 3 lvm on
 modprobe dm_crypt
 clear
 echo Starting Up LUKS Hard Drive Encryption
-cryptsetup -c aes-xts-plain -y -s 512 luksFormat /dev/sdc3 
+cryptsetup -c aes-xts-plain -y -s 512 luksFormat /dev/sdb3 
 clear 
 echo Enter the password to unlock the encrypted drive
-cryptsetup luksOpen /dev/sdc3 ArchSysLuks
+cryptsetup luksOpen /dev/sdb3 ArchSysLuks
 pvcreate /dev/mapper/ArchSysLuks
 vgcreate ArchSys /dev/mapper/ArchSysLuks 
-lvcreate -L 10G -n root ArchSys
-lvcreate -C y -L 2G -n swap ArchSys
+lvcreate -L 10240MiB -n root ArchSys
+lvcreate -C y -L 1024MiB -n swap ArchSys
 lvcreate -l100%FREE -n home ArchSys
 mkswap /dev/ArchSys/swap
-mkfs.vfat -F32 /dev/sdc1
-mkfs.ext4 /dev/sdc2
+mkfs.vfat -F32 /dev/sdb1
+mkfs.ext4 /dev/sdb2
 mkfs.ext4 /dev/ArchSys/root
 mkfs.ext4 /dev/ArchSys/home
 mount /dev/ArchSys/root /mnt
 mkdir /mnt/home
 mount /dev/ArchSys/home /mnt/home
 mkdir /mnt/boot
-mount /dev/sdc2 /mnt/boot
+mount /dev/sdb2 /mnt/boot
 sed -i  '1i\Server = http://mirror.nus.edu.sg/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel
 genfstab -U -p /mnt >> /mnt/etc/fstab
@@ -67,21 +67,21 @@ arch_chroot "sed -i  's@autodetect modconf block@autodetect modconf block encryp
 arch_chroot "mkinitcpio -p linux"
 arch_chroot "pacman -S xorg-server xorg-xinit xorg-server-utils --noconfirm"
 arch_chroot "pacman -S grub-bios --noconfirm"
-arch_chroot "grub-install --target=i386-pc --recheck /dev/sdc"
+arch_chroot "grub-install --target=i386-pc --recheck /dev/sdb"
 arch_chroot "mkdir -p /boot/grub/locale"
 arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
 arch_chroot "sed -i 's@/vmlinuz-linux@/vmlinuz-linux cryptdevice=/dev/sda3:ArchSysLuks@g' /boot/grub/grub.cfg"
-arch_chroot "sudo pacman -S wget --noconfirm"
-arch_chroot "wget https://aur.archlinux.org/packages/pa/packer/packer.tar.gz"
-arch_chroot "tar -xvzf packer.tar.gz"
-arch_chroot "cd packer && makepkg -s --asroot --noconfirm && pacman -U *.xz  --noconfirm"
-arch_chroot "rm -r packer"
-arch_chroot "rm -f packer*"
-arch_chroot "packer -S google-chrome-beta xf86-video-intel xf86-video-ati lib32-ati-dri ttf-dejavu xcalib xfce4 xfce4-goodies lxdm --noedit --noconfirm"
-arch_chroot "systemctl enable lxdm.service"
+#arch_chroot "sudo pacman -S wget --noconfirm"
+#arch_chroot "wget https://aur.archlinux.org/packages/pa/packer/packer.tar.gz"
+#arch_chroot "tar -xvzf packer.tar.gz"
+#arch_chroot "cd packer && makepkg -s --asroot --noconfirm && pacman -U *.xz  --noconfirm"
+#arch_chroot "rm -r packer"
+#arch_chroot "rm -f packer*"
+arch_chroot "pacman -S firefox xf86-video-intel ttf-dejavu xcalib xfce4 xfce4-goodies --noedit --noconfirm"
+#arch_chroot "systemctl enable lxdm.service"
 arch_chroot "echo 'blacklist pcspkr' > /etc/modprobe.d/nobeep.conf"
-arch_chroot "packer -S xf86-video-intel xf86-video-ati lib32-ati-dri ttf-dejavu xcalib --noedit --noconfirm"
-arch_chroot "sed -i '/# session=\/usr\/bin\/startlxde/a\nsession=\/usr\/bin\/startxfce4\nautologin='$usr'' /etc/lxdm/lxdm.conf"
+#arch_chroot "packer -S xf86-video-intel xf86-video-ati lib32-ati-dri ttf-dejavu xcalib --noedit --noconfirm"
+#arch_chroot "sed -i '/# session=\/usr\/bin\/startlxde/a\nsession=\/usr\/bin\/startxfce4\nautologin='$usr'' /etc/lxdm/lxdm.conf"
 arch_chroot "echo The new Archlinux system installation is completed. Please Reboot"
 arch_chroot "exit"
 
