@@ -1,8 +1,8 @@
 clear
 parted /dev/sdb mklabel msdos
-parted -a optimal /dev/sdb mkpart primary fat32 1MiB 5120MiB
-parted -a optimal /dev/sdb mkpart primary ext4 5120MiB 6144MiB
-parted -a optimal /dev/sdb mkpart primary ext4 6144MiB 100%
+parted -a optimal /dev/sdb mkpart primary fat32 1MiB 1024MiB
+parted -a optimal /dev/sdb mkpart primary ext4 1024MiB 2048MiB
+parted -a optimal /dev/sdb mkpart primary ext4 2048MiB 100%
 parted /dev/sdb set 1 boot on
 parted /dev/sdb set 3 lvm on
 modprobe dm_crypt
@@ -71,13 +71,13 @@ arch_chroot "grub-install --target=i386-pc --recheck /dev/sdb"
 arch_chroot "mkdir -p /boot/grub/locale"
 arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
 arch_chroot "sed -i 's@/vmlinuz-linux@/vmlinuz-linux cryptdevice=/dev/sda3:ArchSysLuks@g' /boot/grub/grub.cfg"
-#arch_chroot "sudo pacman -S wget --noconfirm"
-#arch_chroot "wget https://aur.archlinux.org/packages/pa/packer/packer.tar.gz"
-#arch_chroot "tar -xvzf packer.tar.gz"
-#arch_chroot "cd packer && makepkg -s --asroot --noconfirm && pacman -U *.xz  --noconfirm"
-#arch_chroot "rm -r packer"
-#arch_chroot "rm -f packer*"
-arch_chroot "pacman -S firefox xf86-video-intel ttf-dejavu xcalib xfce4 xfce4-goodies --noedit --noconfirm"
+arch_chroot "sudo pacman -S wget --noconfirm"
+arch_chroot "wget https://aur.archlinux.org/packages/pa/packer/packer.tar.gz"
+arch_chroot "tar -xvzf packer.tar.gz"
+arch_chroot "cd packer && makepkg -s --noconfirm && pacman -U *.xz  --noconfirm"
+arch_chroot "rm -r packer"
+arch_chroot "rm -f packer*"
+arch_chroot "pacman -S ttf-dejavu xcalib xfce4 xfce4-goodies --noedit --noconfirm"
 #arch_chroot "systemctl enable lxdm.service"
 arch_chroot "echo 'blacklist pcspkr' > /etc/modprobe.d/nobeep.conf"
 #arch_chroot "packer -S xf86-video-intel xf86-video-ati lib32-ati-dri ttf-dejavu xcalib --noedit --noconfirm"
