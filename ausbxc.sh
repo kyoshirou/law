@@ -1,8 +1,8 @@
 clear
 parted /dev/sdb mklabel msdos
-parted -a optimal /dev/sdb mkpart primary fat32 1MiB 1024MiB
-parted -a optimal /dev/sdb mkpart primary ext4 1024MiB 2048MiB
-parted -a optimal /dev/sdb mkpart primary ext4 2048MiB 100%
+parted -a optimal /dev/sdb mkpart primary fat32 1MiB 2048MiB
+parted -a optimal /dev/sdb mkpart primary ext4 2048MiB 2560MiB
+parted -a optimal /dev/sdb mkpart primary ext4 2560MiB 100%
 parted /dev/sdb set 1 boot on
 parted /dev/sdb set 3 lvm on
 modprobe dm_crypt
@@ -15,7 +15,7 @@ cryptsetup luksOpen /dev/sdb3 ArchSysLuks
 pvcreate /dev/mapper/ArchSysLuks
 vgcreate ArchSys /dev/mapper/ArchSysLuks 
 lvcreate -L 10240MiB -n root ArchSys
-lvcreate -C y -L 1024MiB -n swap ArchSys
+lvcreate -C y -L 2048MiB -n swap ArchSys
 lvcreate -l100%FREE -n home ArchSys
 mkswap /dev/ArchSys/swap
 mkfs.vfat -F32 /dev/sdb1
@@ -71,17 +71,17 @@ arch_chroot "grub-install --target=i386-pc --recheck /dev/sdb"
 arch_chroot "mkdir -p /boot/grub/locale"
 arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
 arch_chroot "sed -i 's@/vmlinuz-linux@/vmlinuz-linux cryptdevice=/dev/sda3:ArchSysLuks@g' /boot/grub/grub.cfg"
-arch_chroot "sudo pacman -S wget --noconfirm"
-arch_chroot "wget https://aur.archlinux.org/packages/pa/packer/packer.tar.gz"
-arch_chroot "tar -xvzf packer.tar.gz"
-arch_chroot "cd packer && makepkg -s --noconfirm && pacman -U *.xz  --noconfirm"
-arch_chroot "rm -r packer"
-arch_chroot "rm -f packer*"
 arch_chroot "pacman -S ttf-dejavu xcalib xfce4 xfce4-goodies --noedit --noconfirm"
-#arch_chroot "systemctl enable lxdm.service"
 arch_chroot "echo 'blacklist pcspkr' > /etc/modprobe.d/nobeep.conf"
-#arch_chroot "packer -S xf86-video-intel xf86-video-ati lib32-ati-dri ttf-dejavu xcalib --noedit --noconfirm"
-#arch_chroot "sed -i '/# session=\/usr\/bin\/startlxde/a\nsession=\/usr\/bin\/startxfce4\nautologin='$usr'' /etc/lxdm/lxdm.conf"
+arch_chroot "pacman -S wget git expac jshon”
+arch_chroot "mkdir packer”
+arch_chroot "cd packer”
+arch_chroot "wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=packer’’
+arch_chroot "mv PKGBUILD?h=packer PKGBUILD”
+arch_chroot "makepkg”
+arch_chroot "pacman -U packer*-any.pkg.tar.xz”
+arch_chroot "cd ..”
+arch_chroot "rm -dR packer”
 arch_chroot "echo The new Archlinux system installation is completed. Please Reboot"
 arch_chroot "exit"
 
