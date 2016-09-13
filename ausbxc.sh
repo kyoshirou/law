@@ -71,17 +71,8 @@ arch_chroot "grub-install --target=i386-pc --recheck /dev/sdb"
 arch_chroot "mkdir -p /boot/grub/locale"
 arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
 arch_chroot "sed -i 's@/vmlinuz-linux@/vmlinuz-linux cryptdevice=/dev/sda3:ArchSysLuks@g' /boot/grub/grub.cfg"
-arch_chroot "pacman -S ttf-dejavu xcalib xfce4 xfce4-goodies --noedit --noconfirm"
+arch_chroot "pacman -S ttf-dejavu xcalib xfce4 xfce4-goodies --noconfirm"
 arch_chroot "echo 'blacklist pcspkr' > /etc/modprobe.d/nobeep.conf"
-arch_chroot "pacman -S wget git expac jshon”
-arch_chroot "mkdir packer”
-arch_chroot "cd packer”
-arch_chroot "wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=packer’’
-arch_chroot "mv PKGBUILD?h=packer PKGBUILD”
-arch_chroot "makepkg”
-arch_chroot "pacman -U packer*-any.pkg.tar.xz”
-arch_chroot "cd ..”
-arch_chroot "rm -dR packer”
 arch_chroot "echo The new Archlinux system installation is completed. Please Reboot"
 arch_chroot "exit"
 
