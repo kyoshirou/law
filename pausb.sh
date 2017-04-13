@@ -28,9 +28,9 @@ mkdir /mnt/home
 mount /dev/ArchSys/home /mnt/home
 mkdir /mnt/boot
 mount /dev/sda2 /mnt/boot
-#sed -i  '1i\Server = http://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist
+sed -i  '1i\Server = http://mirror.0x.sg/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist
 #sed -i  '1i\Server = http://mirror.nus.edu.sg/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist
-sed -i  '1i\Server = http://download.nus.edu.sg/mirror/arch/$repo/os/$arch' /etc/pacman.d/mirrorlist
+#sed -i  '1i\Server = http://download.nus.edu.sg/mirror/arch/$repo/os/$arch' /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel
 genfstab -U -p /mnt >> /mnt/etc/fstab
 sed -i  's/codepage=cp437/codepage=437/' /mnt/etc/fstab
